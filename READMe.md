@@ -64,7 +64,7 @@ public class SimpleJDBCRepository {
     private static final String findUserByNameSQL = "";
     private static final String findAllUserSQL = "";
 
-    public Long createUser() {
+    public Long createUser(User user) {
         //  code
     }
 
@@ -80,7 +80,7 @@ public class SimpleJDBCRepository {
         //  code
     }
 
-    public User updateUser() {
+    public User updateUser(User user) {
         //  code
     }
 
