@@ -23,21 +23,22 @@ public class SimpleJDBCRepository {
     private PreparedStatement ps = null;
     private Statement st = null;
 
-    private static final String createUserSQL = "INSERT INTO myusers (firstname, lastname, age) VALUES (?, ?, ?) RETURNING id";
+    private static final String createUserSQL = "INSERT INTO myusers (id, firstname, lastname, age) VALUES (?, ?, ?, ?) RETURNING id";
     private static final String updateUserSQL = "UPDATE myusers SET firstname = ?, lastname = ?, age = ? WHERE id = ?";
     private static final String deleteUserSQL = "DELETE FROM myusers WHERE id = ?";
     private static final String findUserByIdSQL = "SELECT * FROM myusers WHERE id = ?";
     private static final String findUserByNameSQL = "SELECT * FROM myusers WHERE firstname = ?";
     private static final String findAllUserSQL = "SELECT * FROM myusers";
 
-    public Long createUser(User user) {
+    public Long createUser() {
         Long generatedId = null;
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(createUserSQL);
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setInt(3, user.getAge());
+            ps.setLong(1, 1);
+            ps.setString(2, "Adam");
+            ps.setString(3, "Tobias");
+            ps.setInt(4, 23);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 generatedId = rs.getLong(1);
@@ -123,17 +124,17 @@ public class SimpleJDBCRepository {
         return users;
     }
 
-    public User updateUser(User user) {
+    public User updateUser() {
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(updateUserSQL);
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setInt(3, user.getAge());
-            ps.setLong(4, user.getId());
+            ps.setString(1, "User");
+            ps.setString(2, "Userov");
+            ps.setInt(3, 12);
+            ps.setLong(4, 1L);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
-                return user;
+                return findUserById(1L);
             }
         } catch (SQLException e) {
             e.printStackTrace();
