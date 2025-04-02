@@ -30,15 +30,15 @@ public class SimpleJDBCRepository {
     private static final String findUserByNameSQL = "SELECT * FROM myusers WHERE firstname = ?";
     private static final String findAllUserSQL = "SELECT * FROM myusers";
 
-    public Long createUser() {
+    public Long createUser(User user) {
         Long generatedId = null;
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(createUserSQL);
-            ps.setLong(1, 1);
-            ps.setString(2, "Adam");
-            ps.setString(3, "Tobias");
-            ps.setInt(4, 23);
+            ps.setLong(1, user.getId());
+            ps.setString(2, user.getFirstName());
+            ps.setString(3, user.getLastName());
+            ps.setInt(4, user.getAge());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 generatedId = rs.getLong(1);
@@ -124,17 +124,17 @@ public class SimpleJDBCRepository {
         return users;
     }
 
-    public User updateUser() {
+    public User updateUser(User user) {
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(updateUserSQL);
-            ps.setString(1, "User");
-            ps.setString(2, "Userov");
-            ps.setInt(3, 12);
-            ps.setLong(4, 1L);
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setInt(3, user.getAge());
+            ps.setLong(4, user.getId());
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
-                return findUserById(1L);
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
